@@ -6,7 +6,9 @@ import { authMiddleware } from "../middlewares/authenticate.middleware";
 
 const auth = Router();
 
-auth.get('/me', authMiddleware, authController.me);
+
+// auth.get('/me', authMiddleware, authController.me); // Removed redundant /me endpoint
+
 
 auth.post('/login', loginValidator, authController.login);
 auth.post('/register', registerValidator, authController.register);

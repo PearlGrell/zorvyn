@@ -5,6 +5,8 @@ import env from './config/environment.config';
 import loggerMiddleware from './middlewares/logger.middleware';
 import errorMiddleware from './middlewares/error.middleware';
 import corsOptions from './config/cors.config';
+import path from 'path';
+
 
 const app = express();
 
@@ -14,6 +16,14 @@ app.use(cookieParser());
 app.use(corsOptions);
 
 app.use(loggerMiddleware);
+
+app.set('view engine', 'ejs');
+app.set('views', path.resolve(process.cwd(), 'views'));
+
+app.get('/test-ui', (req, res) => {
+    res.render('test');
+});
+
 
 app.use('/api', router);
 

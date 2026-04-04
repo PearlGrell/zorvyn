@@ -128,19 +128,5 @@ export async function logout(req: Request, res: Response, next: NextFunction) {
     }
 }
 
-export async function me(req: Request, res: Response, next: NextFunction) {
-    try {
-        const user = req.user;
-        if (!user) {
-            throw new AppError("User not found", statusCodes.NOT_FOUND);
-        }
 
-        const { salt, hash, ...userResponse } = user;
-
-        res.status(statusCodes.OK).json({
-            user: userResponse
-        });
-    } catch (error) {
-        next(error);
-    }
-}
+// me function removed (redundant)
