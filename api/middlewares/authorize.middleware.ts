@@ -18,6 +18,7 @@ const ADMIN_PERMISSIONS = [
     Permission.UPDATE_RECORDS,
     Permission.DELETE_RECORDS,
     Permission.MANAGE_USERS,
+    Permission.VIEW_AUDIT_LOGS,
 ];
 
 const ROLE_PERMISSIONS: Record<Role, Permission[]> = {

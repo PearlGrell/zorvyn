@@ -11,7 +11,7 @@ const audit = Router();
  * @swagger
  * tags:
  *   name: Audit
- *   description: System audit logs (Admin only)
+ *   description: System audit logs (Authorized users only)
  */
 
 /**
@@ -58,6 +58,6 @@ const audit = Router();
  *       200:
  *         description: Audit logs retrieved
  */
-audit.get("/", authMiddleware, checkPermission(Permission.MANAGE_USERS), getAllAuditLogsValidator, auditController.getAuditLogs);
+audit.get("/", authMiddleware, checkPermission(Permission.VIEW_AUDIT_LOGS), getAllAuditLogsValidator, auditController.getAuditLogs);
 
 export default audit;

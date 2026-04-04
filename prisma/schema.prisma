@@ -28,6 +28,7 @@ enum Permission {
   VIEW_DASHBOARD
   VIEW_INSIGHTS
   MANAGE_USERS
+  VIEW_AUDIT_LOGS
 }
 
 enum TransactionType {
