@@ -6,6 +6,8 @@ import loggerMiddleware from './middlewares/logger.middleware';
 import errorMiddleware from './middlewares/error.middleware';
 import corsOptions from './config/cors.config';
 import path from 'path';
+import swaggerUi from 'swagger-ui-express';
+import swaggerSpec from './config/swagger.config';
 
 
 const app = express();
@@ -18,6 +20,8 @@ app.use(corsOptions);
 app.use(loggerMiddleware);
 
 app.use('/api', router);
+
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
 app.use(errorMiddleware);
 

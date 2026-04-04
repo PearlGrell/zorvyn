@@ -7,6 +7,32 @@ import dashboardInsightsValidator from "../validators/insights.validators/get-da
 
 const insights = Router();
 
+/**
+ * @swagger
+ * tags:
+ *   name: Insights
+ *   description: Financial insights and trends
+ */
+
+/**
+ * @swagger
+ * /insights:
+ *   get:
+ *     summary: Get dashboard insights
+ *     tags: [Insights]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: query
+ *         name: period
+ *         schema:
+ *           type: string
+ *           enum: [WEEKLY, MONTHLY, YEARLY]
+ *           default: MONTHLY
+ *     responses:
+ *       200:
+ *         description: Insights retrieved
+ */
 insights.get('/', 
     authMiddleware, 
     checkPermission(Permission.VIEW_INSIGHTS), 
