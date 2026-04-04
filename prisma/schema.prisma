@@ -1,0 +1,98 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "sqlite"
+}
+
+enum Role {
+  VIEWER
+  ANALYST
+  ADMIN
+}
+
+enum Status {
+  ACTIVE
+  INACTIVE
+  RESTRICTED
+  DELETED
+}
+
+enum Permission {
+  READ_RECORDS
+  CREATE_RECORDS
+  UPDATE_RECORDS
+  DELETE_RECORDS
+  VIEW_DASHBOARD
+  VIEW_INSIGHTS
+  MANAGE_USERS
+}
+
+enum TransactionType {
+  INCOME
+  EXPENSE
+}
+
+model User {
+  id        String   @id @default(cuid())
+  name      String
+  email     String   @unique
+  salt      String
+  hash      String
+  role      Role     @default(VIEWER)
+  status    Status   @default(ACTIVE)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  transactions Transaction[]
+  auditLogs    AuditLogs[]
+
+  @@index([email])
+}
+
+model TransactionCategory {
+  id        String   @id @default(cuid())
+  name      String
+  createdAt DateTime @default(now())
+
+  transactions Transaction[]
+}
+
+model Transaction {
+  id     String          @id @default(cuid())
+  amount Float
+  type   TransactionType
+
+  categoryId String
+  category   TransactionCategory @relation(fields: [categoryId], references: [id])
+
+  date  DateTime
+  notes String?
+
+  createdBy String
+  user      User   @relation(fields: [createdBy], references: [id])
+
+  createdAt DateTime @default(now())
+
+  @@index([createdBy])
+  @@index([categoryId])
+  @@index([date])
+}
+
+model AuditLogs {
+  id        String   @id @default(cuid())
+  userId    String?
+  action    String
+  entity    String
+  entityId  String
+  timestamp DateTime @default(now())
+
+  user User? @relation(fields: [userId], references: [id])
+
+  @@index([userId])
+  @@index([timestamp])
+  @@index([action])
+  @@index([entity])
+}
