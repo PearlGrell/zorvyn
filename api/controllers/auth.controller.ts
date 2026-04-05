@@ -127,6 +127,3 @@ export async function logout(req: Request, res: Response, next: NextFunction) {
         next(error);
     }
 }
-
-
-// me function removed (redundant)
