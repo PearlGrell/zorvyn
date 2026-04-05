@@ -1,8 +1,8 @@
 import prisma from "../config/prisma.config";
-import { TransactionType } from "../../generated/prisma/client";
+import { Prisma, TransactionType } from "../../generated/prisma/client";
 
 export async function getCategorySpending(userId: string, startDate?: string, endDate?: string) {
-    const where: any = {
+    const where: Prisma.TransactionWhereInput = {
         createdBy: userId,
         type: TransactionType.EXPENSE,
     };
@@ -39,7 +39,7 @@ export async function getCategorySpending(userId: string, startDate?: string, en
 }
 
 export async function getMonthlySummary(userId: string, startDate?: string, endDate?: string) {
-    const where: any = {
+    const where: Prisma.TransactionWhereInput = {
         createdBy: userId,
     };
 
@@ -70,7 +70,7 @@ export async function getMonthlySummary(userId: string, startDate?: string, endD
 }
 
 export async function getRecentTrends(userId: string, startDate?: string, endDate?: string) {
-    const where: any = {
+    const where: Prisma.TransactionWhereInput = {
         createdBy: userId,
     };
 

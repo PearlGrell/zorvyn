@@ -1,5 +1,5 @@
 import prisma from "../config/prisma.config";
-import { TransactionType, type Transaction } from "../../generated/prisma/client";
+import { Prisma, TransactionType, type Transaction } from "../../generated/prisma/client";
 import { audit } from "./audit.service";
 
 export interface TransactionQueryParams {
@@ -38,7 +38,7 @@ export async function findAll(params: TransactionQueryParams = {}): Promise<Tran
         search,
     } = params;
 
-    const where: any = {};
+    const where: Prisma.TransactionWhereInput = {};
     if (type) where.type = type;
     if (categoryId) where.categoryId = categoryId;
     if (userId) where.createdBy = userId;
@@ -62,7 +62,7 @@ export async function findAll(params: TransactionQueryParams = {}): Promise<Tran
         if (maxAmount !== undefined) where.amount.lte = maxAmount;
     }
 
-    const query: any = {
+    const query: Prisma.TransactionFindManyArgs = {
         where,
         include: {
             category: true,
@@ -114,7 +114,7 @@ export async function create(data: { amount: number; type: TransactionType; cate
     return transaction;
 }
 
-export async function update(id: string, data: Partial<{ amount: number; type: TransactionType; categoryId: string; date: Date; notes?: string }>, performingUserId: string): Promise<Transaction> {
+export async function update(id: string, data: Prisma.TransactionUncheckedUpdateInput, performingUserId: string): Promise<Transaction> {
     const transaction = await prisma.transaction.update({
         where: { id },
         data,

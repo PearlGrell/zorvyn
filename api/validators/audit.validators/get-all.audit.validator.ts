@@ -16,7 +16,7 @@ export type AuditLogQueryParams = z.infer<typeof getAllAuditLogsSchema>;
 export default (req: Request, res: Response, next: NextFunction) => {
   try {
     const validated = getAllAuditLogsSchema.parse(req.query);
-    req.query = validated as any;
+    req.query = validated as unknown as typeof req.query;
     next();
   } catch (error) {
     next(error);

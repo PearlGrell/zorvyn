@@ -2,7 +2,7 @@ import type { NextFunction, Request, Response } from "express";
 import * as transactionsService from "../services/transactions.service";
 import statusCodes from "../constants/status_codes";
 import { AppError } from "../utils/error.util";
-import { TransactionType } from "../../generated/prisma/client";
+import { Prisma, TransactionType } from "../../generated/prisma/client";
 
 export async function getAllTransactions(req: Request, res: Response, next: NextFunction) {
     try {
@@ -18,7 +18,7 @@ export async function getAllTransactions(req: Request, res: Response, next: Next
             sortOrder, 
             limit, 
             cursor 
-        } = req.query as any;
+        } = req.query as transactionsService.TransactionQueryParams;
 
         const results = await transactionsService.findAll({
             search,
@@ -89,7 +89,7 @@ export async function updateTransaction(req: Request, res: Response, next: NextF
         const id = req.params.id as string;
         const { amount, type, categoryId, date, notes } = req.body;
 
-        const updateData: any = {
+        const updateData: Prisma.TransactionUncheckedUpdateInput = {
             amount: amount ? parseFloat(amount) : undefined,
             type: type as TransactionType,
             categoryId,
@@ -97,7 +97,7 @@ export async function updateTransaction(req: Request, res: Response, next: NextF
             notes
         };
 
-        Object.keys(updateData).forEach(key => updateData[key] === undefined && delete updateData[key]);
+        Object.keys(updateData).forEach(key => (updateData as Record<string, unknown>)[key] === undefined && delete (updateData as Record<string, unknown>)[key]);
 
         const transaction = await transactionsService.update(id, updateData, req.user?.id!);
         res.status(statusCodes.OK).json({ transaction });

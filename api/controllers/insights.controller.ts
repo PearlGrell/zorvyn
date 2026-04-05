@@ -5,7 +5,11 @@ import statusCodes from "../constants/status_codes";
 export async function getDashboardInsights(req: Request, res: Response, next: NextFunction) {
     try {
         const userId = req.user!.id;
-        const { startDate, endDate } = req.query as any;
+        interface InsightsQuery {
+            startDate?: string;
+            endDate?: string;
+        }
+        const { startDate, endDate } = req.query as unknown as InsightsQuery;
 
         const [categorySpending, monthlySummary, recentTrends] = await Promise.all([
             insightsService.getCategorySpending(userId, startDate, endDate),

@@ -2,7 +2,7 @@ import type { NextFunction, Request, Response } from "express";
 import * as usersService from "../services/users.service";
 import statusCodes from "../constants/status_codes";
 import { AppError } from "../utils/error.util";
-import { Status } from "../../generated/prisma/client";
+import { Prisma, Status } from "../../generated/prisma/client";
 import hashUtil from "../utils/hash.util";
 
 export async function getMe(req: Request, res: Response, next: NextFunction) {
@@ -21,7 +21,7 @@ export async function getMe(req: Request, res: Response, next: NextFunction) {
 
 export async function getAllUsers(req: Request, res: Response, next: NextFunction) {
     try {
-        const { search, sortBy, sortOrder, limit, cursor } = req.query as any;
+        const { search, sortBy, sortOrder, limit, cursor } = req.query as usersService.UserQueryParams;
 
         const { users, nextCursor } = await usersService.findAll({
             search,
@@ -85,8 +85,8 @@ export async function updateUser(req: Request, res: Response, next: NextFunction
             await usersService.updatePassword(id, salt, hash, req.user?.id!);
         }
 
-        const updateData: any = { name, email, role, status };
-        Object.keys(updateData).forEach(key => updateData[key] === undefined && delete updateData[key]);
+        const updateData: Prisma.UserUncheckedUpdateInput = { name, email, role, status };
+        Object.keys(updateData).forEach(key => (updateData as Record<string, unknown>)[key] === undefined && delete (updateData as Record<string, unknown>)[key]);
 
         const updatedUser = await usersService.update(id, updateData, req.user?.id!);
         res.status(statusCodes.OK).json({ user: updatedUser });

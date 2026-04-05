@@ -1,5 +1,5 @@
 import prisma from "../config/prisma.config";
-import { Status, Role, type User } from "../../generated/prisma/client";
+import { Prisma, Status, Role, type User } from "../../generated/prisma/client";
 import { audit } from "./audit.service";
 
 export type SafeUser = Omit<User, 'salt' | 'hash'>;
@@ -36,7 +36,7 @@ export async function findAll(params: UserQueryParams = {}): Promise<UserPaginat
         cursor,
     } = params;
 
-    const where: any = {};
+    const where: Prisma.UserWhereInput = {};
     if (search) {
         where.OR = [
             { name: { contains: search } },
@@ -44,7 +44,7 @@ export async function findAll(params: UserQueryParams = {}): Promise<UserPaginat
         ];
     }
 
-    const query: any = {
+    const query: Prisma.UserFindManyArgs = {
         where,
         orderBy: {
             [sortBy]: sortOrder,
@@ -109,7 +109,7 @@ export async function create(data: { name: string; email: string; salt: string; 
     return user;
 }
 
-export async function update(id: string, data: Partial<{ name: string; email: string; role: Role; status: Status }>, performingUserId: string): Promise<SafeUser> {
+export async function update(id: string, data: Prisma.UserUncheckedUpdateInput, performingUserId: string): Promise<SafeUser> {
     const user = await prisma.user.update({
         where: { id },
         data,

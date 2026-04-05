@@ -1,4 +1,5 @@
 import type { NextFunction, Request, Response } from "express";
+import { Prisma } from "../../generated/prisma/client";
 import prisma from "../config/prisma.config";
 import statusCodes from "../constants/status_codes";
 import type { AuditLogQueryParams } from "../validators/audit.validators/get-all.audit.validator";
@@ -15,7 +16,7 @@ export async function getAuditLogs(req: Request, res: Response, next: NextFuncti
             cursor 
         } = req.query as unknown as AuditLogQueryParams;
 
-        const where: any = {};
+        const where: Prisma.AuditLogsWhereInput = {};
         if (userId) where.userId = userId;
         if (action) where.action = action;
         if (entity) where.entity = entity;
@@ -26,7 +27,7 @@ export async function getAuditLogs(req: Request, res: Response, next: NextFuncti
             if (endDate) where.timestamp.lte = new Date(endDate);
         }
 
-        const query: any = {
+        const query: Prisma.AuditLogsFindManyArgs = {
             where,
             orderBy: {
                 timestamp: 'desc'

@@ -6,15 +6,19 @@ import { Prisma } from "../../generated/prisma/client";
 import environmentConfig from "../config/environment.config";
 import statusCodes from "../constants/status_codes";
 
-export default function errorMiddleware(err: any, req: Request, res: Response, next: NextFunction): void {
+export default function errorMiddleware(err: unknown, req: Request, res: Response, next: NextFunction): void {
     if (res.headersSent) {
         return next(err);
     }
 
+    const errorName = err instanceof Error ? err.name : 'Unknown';
+    const errorMessage = err instanceof Error ? err.message : 'No message';
+    const errorStack = err instanceof Error ? err.stack : undefined;
+
     if (environmentConfig.ENV === "development") {
-        console.error(`[Error] ${err?.name || 'Unknown'}: ${err?.message || 'No message'}`);
+        console.error(`[Error] ${errorName}: ${errorMessage}`);
         if (!(err instanceof AppError) && !(err instanceof ZodError)) {
-            console.error(err?.stack);
+            console.error(errorStack);
         }
     }
 
@@ -57,6 +61,6 @@ export default function errorMiddleware(err: any, req: Request, res: Response, n
     res.status(statusCodes.INTERNAL_SERVER_ERROR).json({
         success: false,
         message: "Internal Server Error",
-        ...(environmentConfig.ENV === "development" ? { error: err?.message, stack: err?.stack } : {}),
+        ...(environmentConfig.ENV === "development" ? { error: errorMessage, stack: errorStack } : {}),
     });
 }

@@ -1,5 +1,5 @@
 import prisma from "../config/prisma.config";
-import type { TransactionCategory } from "../../generated/prisma/client";
+import { Prisma, type TransactionCategory } from "../../generated/prisma/client";
 import { audit } from "./audit.service";
 
 export interface CategoryQueryParams {
@@ -24,14 +24,14 @@ export async function findAll(params: CategoryQueryParams = {}): Promise<Categor
         cursor,
     } = params;
 
-    const where: any = {};
+    const where: Prisma.TransactionCategoryWhereInput = {};
     if (search) {
         where.name = {
             contains: search,
         };
     }
 
-    const query: any = {
+    const query: Prisma.TransactionCategoryFindManyArgs = {
         where,
         orderBy: {
             [sortBy]: sortOrder,

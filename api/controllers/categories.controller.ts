@@ -5,7 +5,7 @@ import { AppError } from "../utils/error.util";
 
 export async function getAllCategories(req: Request, res: Response, next: NextFunction) {
     try {
-        const { search, sortBy, sortOrder, limit, cursor } = req.query as any;
+        const { search, sortBy, sortOrder, limit, cursor } = req.query as categoriesService.CategoryQueryParams;
 
         const { categories, nextCursor } = await categoriesService.findAll({
             search,
