@@ -36,7 +36,11 @@ export async function findAll(params: UserQueryParams = {}): Promise<UserPaginat
         cursor,
     } = params;
 
-    const where: Prisma.UserWhereInput = {};
+    const where: Prisma.UserWhereInput = {
+        status: {
+            not: Status.DELETED
+        }
+    };
     if (search) {
         where.OR = [
             { name: { contains: search } },
